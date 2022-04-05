@@ -5,7 +5,7 @@ import Item from './Item/Item';
 import { Drawer, LinearProgress, Grid, Badge  } from '@mui/material';
 import { AddShoppingCart } from '@mui/icons-material';
 // styles
-import {Wrapper} from './App.styles'
+import {Wrapper, StyledButton} from './App.styles'
 // types
 export type CartItemType={
   id:number;
@@ -25,7 +25,9 @@ const App = () => {
   const [CartItems, setCartItems] = useState([] as CartItemType[])
   const {data, isLoading, error} = useQuery<CartItemType[]>('products', getProducts )
   
-  const getTotalItems = () => null
+  const getTotalItems = (items: CartItemType[]) => {
+    return items.reduce((ack: number, items) => ack + items.amount, 0)
+  }
 
   const handleAddToCart = (clickedItem: CartItemType) => null
 
@@ -38,7 +40,12 @@ const App = () => {
       <Wrapper>
         <Drawer anchor='right' open={CartOpen} onClose={() => setCartOpen(false)}>
           Cart goes here!
-        </Drawer>
+        </Drawer> 
+        <StyledButton onClick={() => setCartOpen(true)}>
+          <Badge badgeContent={getTotalItems(CartItems)} color='error'>
+            <AddShoppingCart/>
+          </Badge>
+        </StyledButton>
         <Grid container spacing={3}>
           {data?.map(item => (
             <Grid item key={item.id} xs={12} sm={4}>
