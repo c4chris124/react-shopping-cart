@@ -21,6 +21,8 @@ const getProducts = async (): Promise<CartItemType[]> =>
   await(await fetch(`https://fakestoreapi.com/products`)).json()
 
 const App = () => {
+  const [CartOpen, setCartOpen] = useState(false)
+  const [CartItems, setCartItems] = useState([] as CartItemType[])
   const {data, isLoading, error} = useQuery<CartItemType[]>('products', getProducts )
   
   const getTotalItems = () => null
@@ -33,8 +35,10 @@ const App = () => {
   if (error) return <div>Something Went wrong ...</div>
 
   return (
-    <div className="App">
       <Wrapper>
+        <Drawer anchor='right' open={CartOpen} onClose={() => setCartOpen(false)}>
+          Cart goes here!
+        </Drawer>
         <Grid container spacing={3}>
           {data?.map(item => (
             <Grid item key={item.id} xs={12} sm={4}>
@@ -43,7 +47,6 @@ const App = () => {
           ))}
         </Grid>
       </Wrapper>
-    </div>
   );
 }
 
